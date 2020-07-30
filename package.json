@@ -1,0 +1,52 @@
+{
+	"name": "blackjack-game",
+	"version": "1.0.0",
+	"description": "Blackjack Game",
+	"main": "index.js",
+	"scripts": {
+		"start": "webpack-dev-server --open",
+		"build": "webpack --config webpack.config.prod.js",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Joanna-Chadzynska/blackjack-game.git"
+	},
+	"author": "Joanna Chądzyńska",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/Joanna-Chadzynska/blackjack-game/issues"
+	},
+	"homepage": "https://github.com/Joanna-Chadzynska/blackjack-game#readme",
+	"devDependencies": {
+		"@types/lodash": "^4.14.158",
+		"autoprefixer": "^9.8.5",
+		"clean-webpack-plugin": "^3.0.0",
+		"css-loader": "^4.1.1",
+		"cssnano": "^4.1.10",
+		"file-loader": "^6.0.0",
+		"html-webpack-plugin": "^4.3.0",
+		"image-webpack-loader": "^6.0.0",
+		"mini-css-extract-plugin": "^0.9.0",
+		"node-sass": "^4.14.1",
+		"postcss-import": "^12.0.1",
+		"postcss-loader": "^3.0.0",
+		"postcss-preset-env": "^6.7.0",
+		"sass-loader": "^9.0.2",
+		"style-loader": "^1.2.1",
+		"sugarss": "^2.0.0",
+		"ts-loader": "^8.0.1",
+		"typescript": "^3.9.7",
+		"webpack": "^4.44.1",
+		"webpack-cli": "^3.3.12",
+		"webpack-dev-server": "^3.11.0"
+	},
+	"dependencies": {
+		"axios": "^0.19.2",
+		"class-transformer": "^0.3.1",
+		"class-validator": "^0.12.2",
+		"dotenv": "^8.2.0",
+		"lodash": "^4.17.19",
+		"reflect-metadata": "^0.1.13"
+	}
+}
