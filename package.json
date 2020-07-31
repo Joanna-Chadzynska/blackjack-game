@@ -4,7 +4,7 @@
 	"description": "Blackjack Game",
 	"main": "index.js",
 	"scripts": {
-		"start": "webpack-dev-server --open",
+		"start": "webpack-dev-server",
 		"build": "webpack --config webpack.config.prod.js",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
@@ -29,12 +29,9 @@
 		"image-webpack-loader": "^6.0.0",
 		"mini-css-extract-plugin": "^0.9.0",
 		"node-sass": "^4.14.1",
-		"postcss-import": "^12.0.1",
 		"postcss-loader": "^3.0.0",
-		"postcss-preset-env": "^6.7.0",
 		"sass-loader": "^9.0.2",
 		"style-loader": "^1.2.1",
-		"sugarss": "^2.0.0",
 		"ts-loader": "^8.0.1",
 		"typescript": "^3.9.7",
 		"webpack": "^4.44.1",
