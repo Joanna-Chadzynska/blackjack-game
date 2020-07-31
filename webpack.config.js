@@ -1,8 +1,8 @@
 const path = require('path');
 const dotenv = require('dotenv');
-const { SourceMapDevToolPlugin } = require('webpack');
-const webpack = require('webpack');
+// const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 dotenv.config();
 
@@ -18,7 +18,9 @@ module.exports = {
 	devServer: {
 		open: true,
 		contentBase: path.resolve(__dirname),
+		watchContentBase: true,
 		port: 3000,
+		hot: true,
 	},
 	module: {
 		rules: [
@@ -67,7 +69,7 @@ module.exports = {
 				use: 'file-loader',
 			},
 			{
-				test: /\.ts?$/,
+				test: /\.ts$/,
 				use: 'ts-loader',
 				exclude: /node_modules/,
 			},
@@ -93,6 +95,10 @@ module.exports = {
 		],
 	},
 	plugins: [
+		new HtmlWebpackPlugin({
+			filename: 'index.html',
+			template: './index.html',
+		}),
 		// new MiniCssExtractPlugin({
 		// 	filename: 'style.css',
 		// }),
