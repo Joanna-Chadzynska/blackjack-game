@@ -40,11 +40,11 @@
 		// "inlineSourceMap": true,
 		// "inlineSources": true,
 
-		"experimentalDecorators": true
+		"experimentalDecorators": true,
 
 		/* Advanced Options */
-		// "skipLibCheck": true /* Skip type checking of declaration files. */,
-		// "forceConsistentCasingInFileNames": true /* Disallow inconsistently-cased references to the same file. */
+		"skipLibCheck": true /* Skip type checking of declaration files. */,
+		"forceConsistentCasingInFileNames": true /* Disallow inconsistently-cased references to the same file. */
 	},
 	"exclude": [
 		"node_modules" // would be the default
