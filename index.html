@@ -7,10 +7,34 @@
 		<link rel="stylesheet" href="dist/style.bundle.css" />
 	</head>
 	<body>
-		<h1>Blackjack Game App</h1>
-		<div></div>
-		<!-- <img src="src/images/photo.jpg" alt="dolphin" /> -->
-		<footer>&copy; Joanna Chądzyńska</footer>
+		<div class="game">
+			<div class="game__header">
+				<h3 class="title">Blackjack</h3>
+			</div>
+
+			<div class="game__mode">
+				<p>Select mode:</p>
+				<button class="btn">Single Player</button>
+				<button class="btn">Multiplayer</button>
+			</div>
+			<hr />
+			<div class="game__body">
+				<button class="btn" id="btn__start">Start</button>
+				<button class="btn" id="btn__hit">Hit Me</button>
+				<button class="btn" id="btn__stay">Stay</button>
+			</div>
+
+			<div class="status" id="status"></div>
+
+			<div class="deck" id="deck">
+				<div id="deckCount">52</div>
+			</div>
+
+			<div id="players" class="players"></div>
+
+			<div class="clear"></div>
+		</div>
+		<!-- <footer>&copy; Joanna Chądzyńska</footer> -->
 		<script type="module" src="dist/bundle.js"></script>
 	</body>
 </html>
