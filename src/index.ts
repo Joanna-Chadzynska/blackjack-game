@@ -2,16 +2,14 @@ import './components/footer';
 import './sass/index.scss';
 import { shuffleCards } from './components/Cards';
 import { Game } from './components/Game';
-import { Deck as IDeck } from './interfaces/Deck';
+import { Deck } from './interfaces/Deck';
+import { Decks } from './helpers/Deck';
 
 const startBtn = document.getElementById('btn__start')!;
 const hitBtn = document.getElementById('btn__hit')!;
 const stayBtn = document.getElementById('btn__stay')!;
-// const deckCount = document.getElementById('deckCount')!;
 
-let pile: IDeck;
-
-const game = new Game();
+let pile: Deck;
 
 const setDeck = async () => {
 	const deck = await shuffleCards().then((resp) => resp);
@@ -19,12 +17,16 @@ const setDeck = async () => {
 	return pile;
 };
 
-setDeck();
+let newDeck = new Decks();
+newDeck.createAndShuffleDeck();
+
+const game = new Game(newDeck.deck);
 
 const startGame = async (_e: Event) => {
-	document.getElementById('btn__start')!.innerHTML = 'Restart';
+	startBtn.innerHTML = 'Restart';
 	document.getElementById('status')!.style.display = 'none';
 
+	await setDeck();
 	game.currentPlayer;
 	game.createPlayers(2);
 	game.createPlayersUI();
@@ -44,4 +46,5 @@ hitBtn.addEventListener('click', () => {
 
 stayBtn.addEventListener('click', () => {
 	console.log('stay');
+	game.stay();
 });

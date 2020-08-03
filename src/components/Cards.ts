@@ -7,7 +7,7 @@ export const shuffleCards = async (): Promise<Deck> => {
 	const response = await axios.get(
 		'https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1'
 	);
-	const data = await response.data;
+	const data: Deck = await response.data;
 	return data;
 };
 

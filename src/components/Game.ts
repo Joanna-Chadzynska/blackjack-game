@@ -2,17 +2,34 @@ import { Player } from '../interfaces/Player';
 import { Card } from '../interfaces/Card';
 // import { Response as IResponse } from '../interfaces/Response';
 import { Player as IPlayer } from '../interfaces/Player';
-import { drawCard, getDeckDetails } from './Cards';
+import { drawCard, getDeckDetails, shuffleCards } from './Cards';
+import { Deck } from '../interfaces/Deck';
 
 export class Game {
 	public players: Player[];
 	public currentPlayer: number;
 	public deckCount: HTMLDivElement;
+	public status: HTMLDivElement;
+	public deck: Deck | null;
 
-	constructor() {
+	public constructor(newDeck: Deck | null) {
 		this.players = new Array();
 		this.currentPlayer = 0;
+		this.deck = newDeck;
 		this.deckCount = document.getElementById('deckCount')! as HTMLDivElement;
+		this.status = document.getElementById('status')! as HTMLDivElement;
+	}
+
+	async startGame() {
+		document.getElementById('btn__start')!.innerHTML = 'Restart';
+		this.status.style.display = 'none';
+
+		await this.createAndShuffleDeck();
+	}
+
+	async createAndShuffleDeck() {
+		const newDeck = await shuffleCards().then((resp) => resp);
+		return newDeck;
 	}
 
 	createPlayers(num: number) {
@@ -44,6 +61,7 @@ export class Game {
 			this.updatePoints();
 		}
 		this.updateDeck(deckId);
+
 		return this.players;
 	}
 
@@ -78,7 +96,6 @@ export class Game {
 
 	async hitMe(deckId: string) {
 		const newCard: Card = (await drawCard(deckId, 1)).cards[0];
-		getDeckDetails(deckId);
 		let currentPlayer = this.players[this.currentPlayer];
 
 		currentPlayer.hand.push(newCard);
@@ -89,12 +106,28 @@ export class Game {
 		this.updateDeck(deckId);
 	}
 
+	stay() {
+		// move to next player, if any
+		if (this.currentPlayer !== this.players.length - 1) {
+			document
+				.getElementById(`player_${this.currentPlayer}`)!
+				.classList.remove('active');
+			this.currentPlayer += 1;
+			document
+				.getElementById(`player_${this.currentPlayer}`)!
+				.classList.add('active');
+		} else {
+			console.log('end');
+		}
+	}
+
 	checkWin() {
-		const status = document.getElementById('status')!;
 		if (this.players[this.currentPlayer].points >= 22) {
-			status.innerHTML = `Player: ${this.players[this.currentPlayer].id} LOST`;
-			status.style.display = 'inline-block';
-			// this.endGame();
+			this.status.innerHTML = `Player: ${
+				this.players[this.currentPlayer].id
+			} LOST`;
+			this.status.style.display = 'inline-block';
+			// end game
 		}
 	}
 
