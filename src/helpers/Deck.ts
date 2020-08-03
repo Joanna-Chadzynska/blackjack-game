@@ -1,13 +1,16 @@
-export class Deck {
-	public readonly success: boolean;
-	public readonly deck_id: string;
-	public readonly shuffled: boolean;
-	public readonly remaining: number;
+import { shuffleCards } from '../components/Cards';
+import { Deck } from '../interfaces/Deck';
 
-	public constructor(pile: Deck) {
-		this.success = pile.success;
-		this.deck_id = pile.deck_id;
-		this.shuffled = pile.shuffled;
-		this.remaining = pile.remaining;
+export class Decks {
+	public deck: Deck | null;
+	constructor() {
+		this.deck = null;
+	}
+
+	async createAndShuffleDeck() {
+		const data = await shuffleCards().then((resp) => resp);
+		this.deck = data;
+
+		return this.deck;
 	}
 }
