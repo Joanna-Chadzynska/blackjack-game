@@ -3,11 +3,11 @@ import { Card } from '../interfaces/Card';
 import { Player as IPlayer } from '../interfaces/Player';
 import { drawCard, getDeckDetails } from './Cards';
 import { Pile } from './Pile';
-import { Autobind } from '../decorators/autobind';
 
 export class Game {
 	public deck: Pile;
 	public players: Player[];
+	public hand: Card[];
 	public currentPlayer: number;
 	public deckCount: HTMLDivElement;
 	public status: HTMLDivElement;
@@ -18,39 +18,52 @@ export class Game {
 	public constructor() {
 		this.players = new Array();
 		this.currentPlayer = 0;
+		this.deck = new Pile();
+		this.hand = new Array();
 		this.deckCount = document.getElementById('deckCount')! as HTMLDivElement;
 		this.status = document.getElementById('status')! as HTMLDivElement;
 		this.startBtn = document.getElementById('btn__start')!;
 		this.hitBtn = document
 			.getElementById('btn__hit')!
-			.addEventListener('click', this.hitMe.bind(this));
+			.addEventListener('click', async () => {
+				await this.hitMe();
+			});
 		this.stayBtn = document
 			.getElementById('btn__stay')!
 			.addEventListener('click', this.stay.bind(this));
-		this.deck = new Pile();
 	}
 
-	async startGame() {
+	async startGame(numOfPlayers: number) {
 		this.startBtn.innerHTML = `Restart`;
 		this.status.style.display = 'none';
 		await this.deck.createAndShuffleDeck();
-		this.currentPlayer;
-		this.createPlayers(2);
+
+		// set deck id to local storage
+		localStorage.setItem('deckId', this.deck.deck.deck_id);
+		// create and render players
+		this.createPlayers(numOfPlayers);
 		this.createPlayersUI();
-		this.dealHands();
+
+		// deal cards for each player
+		await this.dealHands();
+
+		document
+			.getElementById('player_' + this.currentPlayer)!
+			.classList.add('active');
 	}
 
 	createPlayers(num: number) {
 		for (let i = 1; i <= num; i++) {
-			let hand: Card[] = new Array();
-			let player: IPlayer = {
+			const player: IPlayer = {
 				name: `Player${i}`,
 				id: i,
 				points: 0,
-				hand: hand,
+				hand: this.hand,
 			};
+
 			this.players.push(player);
 		}
+		return this.players;
 	}
 
 	async dealHands() {
@@ -99,23 +112,29 @@ export class Game {
 		}
 	}
 
-	@Autobind
 	async hitMe() {
-		const newCard: Card = (await drawCard(this.deck.deck.deck_id, 1)).cards[0];
-		let currentPlayer = this.players[this.currentPlayer];
+		if (this.deck.deck.deck_id === localStorage.getItem('deckId')) {
+			const getCards = await drawCard(this.deck.deck.deck_id, 1);
 
-		currentPlayer.hand.push(newCard);
-		currentPlayer.points = this.getPoints(currentPlayer.hand);
-		this.renderCard(newCard.image, this.currentPlayer);
-		this.updatePoints();
-		this.checkWin();
-		this.updateDeck();
+			const newCard: Card = getCards.cards[0];
+
+			const currentPlayer = this.players[this.currentPlayer];
+
+			currentPlayer.hand.push(newCard);
+			currentPlayer.points = this.getPoints(currentPlayer.hand);
+
+			this.renderCard(newCard.image, this.currentPlayer);
+			this.updatePoints();
+			this.updateDeck();
+			this.checkWin();
+		} else {
+			return;
+		}
 	}
 
-	@Autobind
 	stay() {
 		// move to next player, if any
-		if (this.currentPlayer !== this.players.length - 1) {
+		if (this.currentPlayer != this.players.length - 1) {
 			document
 				.getElementById(`player_${this.currentPlayer}`)!
 				.classList.remove('active');
@@ -125,11 +144,13 @@ export class Game {
 				.classList.add('active');
 		} else {
 			console.log('end');
+			// this.checkWin();
+			// window.location.reload();
 		}
 	}
 
 	checkWin() {
-		if (this.players[this.currentPlayer].points >= 22) {
+		if (this.players[this.currentPlayer].points > 22) {
 			this.status.innerHTML = `Player: ${
 				this.players[this.currentPlayer].id
 			} LOST`;
