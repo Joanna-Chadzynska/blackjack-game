@@ -113,3 +113,11 @@
 	justify-content: space-evenly;
 	align-items: center;
 }
+
+.game__selected-mode {
+	display: none;
+
+	&.show {
+		display: inline-block;
+	}
+}
