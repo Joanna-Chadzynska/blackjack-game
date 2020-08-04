@@ -3,14 +3,6 @@ import { Deck } from '../interfaces/Deck';
 import { Response as IResponse } from '../interfaces/Response';
 import { Card } from '../interfaces/Card';
 
-export const shuffleCards = async (): Promise<Deck> => {
-	const response = await axios.get(
-		'https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1'
-	);
-	const data: Deck = await response.data;
-	return data;
-};
-
 export const drawCard = async (
 	deck_id: string,
 	countNr: number
