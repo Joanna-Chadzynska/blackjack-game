@@ -7,7 +7,6 @@ export const drawCard = async (
 	deck_id: string,
 	countNr: number
 ): Promise<IResponse> => {
-	// let userDeck: Response;
 	let card: any;
 	let cards: Card[] = [];
 
