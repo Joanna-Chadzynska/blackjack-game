@@ -1,35 +1,43 @@
 import { Player } from '../interfaces/Player';
 import { Card } from '../interfaces/Card';
-// import { Response as IResponse } from '../interfaces/Response';
 import { Player as IPlayer } from '../interfaces/Player';
-import { drawCard, getDeckDetails, shuffleCards } from './Cards';
-import { Deck } from '../interfaces/Deck';
+import { drawCard, getDeckDetails } from './Cards';
+import { Pile } from './Pile';
+import { Autobind } from '../decorators/autobind';
 
 export class Game {
+	public deck: Pile;
 	public players: Player[];
 	public currentPlayer: number;
 	public deckCount: HTMLDivElement;
 	public status: HTMLDivElement;
-	public deck: Deck | null;
+	public startBtn: HTMLElement;
+	public hitBtn: void;
+	public stayBtn: void;
 
-	public constructor(newDeck: Deck | null) {
+	public constructor() {
 		this.players = new Array();
 		this.currentPlayer = 0;
-		this.deck = newDeck;
 		this.deckCount = document.getElementById('deckCount')! as HTMLDivElement;
 		this.status = document.getElementById('status')! as HTMLDivElement;
+		this.startBtn = document.getElementById('btn__start')!;
+		this.hitBtn = document
+			.getElementById('btn__hit')!
+			.addEventListener('click', this.hitMe.bind(this));
+		this.stayBtn = document
+			.getElementById('btn__stay')!
+			.addEventListener('click', this.stay.bind(this));
+		this.deck = new Pile();
 	}
 
 	async startGame() {
-		document.getElementById('btn__start')!.innerHTML = 'Restart';
+		this.startBtn.innerHTML = `Restart`;
 		this.status.style.display = 'none';
-
-		await this.createAndShuffleDeck();
-	}
-
-	async createAndShuffleDeck() {
-		const newDeck = await shuffleCards().then((resp) => resp);
-		return newDeck;
+		await this.deck.createAndShuffleDeck();
+		this.currentPlayer;
+		this.createPlayers(2);
+		this.createPlayersUI();
+		this.dealHands(this.deck.deck.deck_id);
 	}
 
 	createPlayers(num: number) {
@@ -94,8 +102,9 @@ export class Game {
 		}
 	}
 
-	async hitMe(deckId: string) {
-		const newCard: Card = (await drawCard(deckId, 1)).cards[0];
+	@Autobind
+	async hitMe() {
+		const newCard: Card = (await drawCard(this.deck.deck.deck_id, 1)).cards[0];
 		let currentPlayer = this.players[this.currentPlayer];
 
 		currentPlayer.hand.push(newCard);
@@ -103,9 +112,10 @@ export class Game {
 		this.renderCard(newCard.image, this.currentPlayer);
 		this.updatePoints();
 		this.checkWin();
-		this.updateDeck(deckId);
+		this.updateDeck(this.deck.deck.deck_id);
 	}
 
+	@Autobind
 	stay() {
 		// move to next player, if any
 		if (this.currentPlayer !== this.players.length - 1) {
