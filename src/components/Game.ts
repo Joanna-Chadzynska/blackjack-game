@@ -37,7 +37,7 @@ export class Game {
 		this.currentPlayer;
 		this.createPlayers(2);
 		this.createPlayersUI();
-		this.dealHands(this.deck.deck.deck_id);
+		this.dealHands();
 	}
 
 	createPlayers(num: number) {
@@ -51,26 +51,23 @@ export class Game {
 			};
 			this.players.push(player);
 		}
-		return this.players;
 	}
 
-	async dealHands(deckId: string) {
+	async dealHands() {
+		const deckId = this.deck.deck.deck_id;
+		// alternate handing cards to each player
+		// 2 cards each
 		for (let player of this.players) {
 			const cards = (await drawCard(deckId, 2)).cards;
-
 			player.hand = cards;
 			player.points = this.getPoints(player.hand);
 
-			for (let i = 0; i < player.hand.length; i++) {
-				let img = player.hand[i].image;
-				this.renderCard(img, player.id - 1);
-			}
+			player.hand.forEach((el) => this.renderCard(el.image, player.id - 1));
 
 			this.updatePoints();
 		}
-		this.updateDeck(deckId);
 
-		return this.players;
+		this.updateDeck();
 	}
 
 	renderCard(card: string, player: number) {
@@ -112,7 +109,7 @@ export class Game {
 		this.renderCard(newCard.image, this.currentPlayer);
 		this.updatePoints();
 		this.checkWin();
-		this.updateDeck(this.deck.deck.deck_id);
+		this.updateDeck();
 	}
 
 	@Autobind
@@ -159,8 +156,8 @@ export class Game {
 		document.getElementById('status')!.style.display = 'inline-block';
 	}
 
-	async updateDeck(deckId: string) {
-		let deckRemaining = await getDeckDetails(deckId);
+	async updateDeck() {
+		let deckRemaining = await getDeckDetails(this.deck.deck.deck_id);
 		this.deckCount.innerHTML = `${deckRemaining.remaining}`;
 	}
 
