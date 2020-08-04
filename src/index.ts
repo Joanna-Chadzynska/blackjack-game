@@ -4,9 +4,8 @@ import { Game } from './components/Game';
 
 const startBtn = document.getElementById('btn__start')!;
 
-let game = new Game();
-
 const startGame = () => {
+	let game = new Game();
 	game.startGame();
 };
 
