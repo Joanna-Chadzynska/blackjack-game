@@ -40,7 +40,9 @@ export class Game {
 
 		// set deck id to local storage
 		localStorage.setItem('deckId', this.deck.deck.deck_id);
+
 		// create and render players
+
 		this.createPlayers(numOfPlayers);
 		this.createPlayersUI();
 
@@ -67,9 +69,14 @@ export class Game {
 	}
 
 	async dealHands() {
+		if (localStorage.getItem('players') !== this.players.length.toString())
+			return;
+
 		const deckId = this.deck.deck.deck_id;
+
 		// alternate handing cards to each player
 		// 2 cards each
+
 		for (let player of this.players) {
 			const cards = (await drawCard(deckId, 2)).cards;
 			player.hand = cards;
@@ -115,9 +122,7 @@ export class Game {
 	async hitMe() {
 		if (this.deck.deck.deck_id === localStorage.getItem('deckId')) {
 			const getCards = await drawCard(this.deck.deck.deck_id, 1);
-
 			const newCard: Card = getCards.cards[0];
-
 			const currentPlayer = this.players[this.currentPlayer];
 
 			currentPlayer.hand.push(newCard);
@@ -134,7 +139,7 @@ export class Game {
 
 	stay() {
 		// move to next player, if any
-		if (this.currentPlayer != this.players.length - 1) {
+		if (this.currentPlayer !== this.players.length - 1) {
 			document
 				.getElementById(`player_${this.currentPlayer}`)!
 				.classList.remove('active');
@@ -143,19 +148,17 @@ export class Game {
 				.getElementById(`player_${this.currentPlayer}`)!
 				.classList.add('active');
 		} else {
-			console.log('end');
-			// this.checkWin();
-			// window.location.reload();
+			this.endGame();
 		}
 	}
 
 	checkWin() {
-		if (this.players[this.currentPlayer].points > 22) {
+		if (this.players[this.currentPlayer].points > 21) {
 			this.status.innerHTML = `Player: ${
 				this.players[this.currentPlayer].id
 			} LOST`;
 			this.status.style.display = 'inline-block';
-			// end game
+			this.stay();
 		}
 	}
 
@@ -164,17 +167,28 @@ export class Game {
 		let score = 0;
 
 		for (let i = 0; i < this.players.length; i++) {
-			if (this.players[i].points > score && this.players[i].points <= 22) {
+			// let previous = this.players[i - 1];
+			let current = this.players[i];
+			// let next = this.players[i + 1];
+
+			if (current.points > score && current.points < 22) {
 				winner = i;
 			}
 
 			score = this.players[i].points;
 		}
 
-		document.getElementById(
-			'status'
-		)!.innerHTML = `Winner: Player${this.players[winner].id}`;
-		document.getElementById('status')!.style.display = 'inline-block';
+		if (
+			score < 22 &&
+			this.players[this.currentPlayer].points ===
+				this.players[this.currentPlayer - 1].points
+		) {
+			this.status.innerHTML = 'Draw!';
+			this.status.style.display = 'inline-block';
+		} else {
+			this.status.innerHTML = `Winner: Player ${this.players[winner].id}`;
+			this.status.style.display = 'inline-block';
+		}
 	}
 
 	async updateDeck() {
