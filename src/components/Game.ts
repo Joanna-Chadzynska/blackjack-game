@@ -1,26 +1,21 @@
-import { Player } from '../interfaces/Player';
 import { Card } from '../interfaces/Card';
-import { Player as IPlayer } from '../interfaces/Player';
-import { drawCard, getDeckDetails } from './Cards';
 import { Pile } from './Pile';
+import { Players } from './Players';
 
 export class Game {
 	public deck: Pile;
-	public players: Player[];
-	public hand: Card[];
+	public players: Players;
 	public currentPlayer: number;
-	public deckCount: HTMLDivElement;
-	public status: HTMLDivElement;
-	public startBtn: HTMLElement;
+	private readonly status: HTMLDivElement;
+	private startBtn: HTMLElement;
 	public hitBtn: void;
 	public stayBtn: void;
 
 	public constructor() {
-		this.players = new Array();
+		this.players = new Players();
 		this.currentPlayer = 0;
 		this.deck = new Pile();
-		this.hand = new Array();
-		this.deckCount = document.getElementById('deckCount')! as HTMLDivElement;
+
 		this.status = document.getElementById('status')! as HTMLDivElement;
 		this.startBtn = document.getElementById('btn__start')!;
 		this.hitBtn = document
@@ -33,7 +28,7 @@ export class Game {
 			.addEventListener('click', this.stay.bind(this));
 	}
 
-	async startGame(numOfPlayers: number) {
+	public async startGame(numOfPlayers: number) {
 		this.startBtn.innerHTML = `Restart`;
 		this.status.style.display = 'none';
 		await this.deck.createAndShuffleDeck();
@@ -43,8 +38,8 @@ export class Game {
 
 		// create and render players
 
-		this.createPlayers(numOfPlayers);
-		this.createPlayersUI();
+		this.players.createPlayers(numOfPlayers);
+		this.players.createPlayersUI();
 
 		// deal cards for each player
 		await this.dealHands();
@@ -54,22 +49,10 @@ export class Game {
 			.classList.add('active');
 	}
 
-	createPlayers(num: number) {
-		for (let i = 1; i <= num; i++) {
-			const player: IPlayer = {
-				name: `Player${i}`,
-				id: i,
-				points: 0,
-				hand: this.hand,
-			};
-
-			this.players.push(player);
-		}
-		return this.players;
-	}
-
-	async dealHands() {
-		if (localStorage.getItem('players') !== this.players.length.toString())
+	private async dealHands() {
+		if (
+			localStorage.getItem('players') !== this.players.players.length.toString()
+		)
 			return;
 
 		const deckId = this.deck.deck.deck_id;
@@ -77,69 +60,55 @@ export class Game {
 		// alternate handing cards to each player
 		// 2 cards each
 
-		for (let player of this.players) {
-			const cards = (await drawCard(deckId, 2)).cards;
+		for (let player of this.players.players) {
+			const cards = (await this.deck.drawCard(deckId, 2)).cards;
 			player.hand = cards;
 			player.points = this.getPoints(player.hand);
 
-			player.hand.forEach((el) => this.renderCard(el.image, player.id - 1));
+			player.hand.forEach((el) =>
+				this.deck.renderCard(el.image, player.id - 1)
+			);
 
 			this.updatePoints();
 		}
 
-		this.updateDeck();
+		this.deck.updateDeck(this.deck.deck.deck_id);
 	}
 
-	renderCard(card: string, player: number) {
-		const hand = document.getElementById(`hand_${player}`)!;
-
-		const image = this.getCardUI(card);
-		if (hand !== null) {
-			hand.appendChild(image);
-		}
-	}
-
-	getCardUI(card: string) {
-		const image = document.createElement('img')!;
-		image.className = 'card';
-		image.src = card;
-		return image;
-	}
-
-	getPoints(playerHand: Card[]) {
+	private getPoints(playerHand: Card[]) {
 		const result = playerHand.reduce((a, b) => a + b.weight, 0);
 		return result;
 	}
 
-	updatePoints() {
-		for (let i = 0; i < this.players.length; i++) {
+	private updatePoints() {
+		for (let i = 0; i < this.players.players.length; i++) {
 			document.getElementById(
 				`points_${i}`
-			)!.innerHTML = `${this.players[i].points}`;
+			)!.innerHTML = `${this.players.players[i].points}`;
 		}
 	}
 
-	async hitMe() {
+	private async hitMe() {
 		if (this.deck.deck.deck_id === localStorage.getItem('deckId')) {
-			const getCards = await drawCard(this.deck.deck.deck_id, 1);
+			const getCards = await this.deck.drawCard(this.deck.deck.deck_id, 1);
 			const newCard: Card = getCards.cards[0];
-			const currentPlayer = this.players[this.currentPlayer];
+			const currentPlayer = this.players.players[this.currentPlayer];
 
 			currentPlayer.hand.push(newCard);
 			currentPlayer.points = this.getPoints(currentPlayer.hand);
 
-			this.renderCard(newCard.image, this.currentPlayer);
+			this.deck.renderCard(newCard.image, this.currentPlayer);
 			this.updatePoints();
-			this.updateDeck();
+			this.deck.updateDeck(this.deck.deck.deck_id);
 			this.checkWin();
 		} else {
 			return;
 		}
 	}
 
-	stay() {
+	private stay() {
 		// move to next player, if any
-		if (this.currentPlayer !== this.players.length - 1) {
+		if (this.currentPlayer !== this.players.players.length - 1) {
 			document
 				.getElementById(`player_${this.currentPlayer}`)!
 				.classList.remove('active');
@@ -152,71 +121,42 @@ export class Game {
 		}
 	}
 
-	checkWin() {
-		if (this.players[this.currentPlayer].points > 21) {
+	private checkWin() {
+		if (this.players.players[this.currentPlayer].points > 21) {
 			this.status.innerHTML = `Player: ${
-				this.players[this.currentPlayer].id
+				this.players.players[this.currentPlayer].id
 			} LOST`;
 			this.status.style.display = 'inline-block';
 			this.stay();
 		}
 	}
 
-	endGame() {
+	private endGame() {
 		let winner = -1;
 		let score = 0;
 
-		for (let i = 0; i < this.players.length; i++) {
+		for (let i = 0; i < this.players.players.length; i++) {
 			// let previous = this.players[i - 1];
-			let current = this.players[i];
+			let current = this.players.players[i];
 			// let next = this.players[i + 1];
 
 			if (current.points > score && current.points < 22) {
 				winner = i;
 			}
 
-			score = this.players[i].points;
+			score = this.players.players[i].points;
 		}
 
 		if (
 			score < 22 &&
-			this.players[this.currentPlayer].points ===
-				this.players[this.currentPlayer - 1].points
+			this.players.players[this.currentPlayer].points ===
+				this.players.players[this.currentPlayer - 1].points
 		) {
 			this.status.innerHTML = 'Draw!';
 			this.status.style.display = 'inline-block';
 		} else {
-			this.status.innerHTML = `Winner: Player ${this.players[winner].id}`;
+			this.status.innerHTML = `Winner: Player ${this.players.players[winner].id}`;
 			this.status.style.display = 'inline-block';
-		}
-	}
-
-	async updateDeck() {
-		let deckRemaining = await getDeckDetails(this.deck.deck.deck_id);
-		this.deckCount.innerHTML = `${deckRemaining.remaining}`;
-	}
-
-	createPlayersUI() {
-		document.getElementById('players')!.innerHTML = '';
-
-		for (let i = 0; i < this.players.length; i++) {
-			const div_player = document.createElement('div')!;
-			const div_playerId = document.createElement('div')!;
-			const div_hand = document.createElement('div')! as HTMLDivElement;
-			const div_points = document.createElement('div')!;
-
-			div_points.className = 'points';
-			div_points.id = `points_${i}`;
-			div_player.className = 'player';
-			div_player.id = `player_${i}`;
-			div_hand.id = `hand_${i}`;
-			div_hand.className = `hand`;
-
-			div_playerId.innerHTML = `Player ${this.players[i].id}`;
-			div_player.appendChild(div_playerId);
-			div_player.appendChild(div_hand);
-			div_player.appendChild(div_points);
-			document.getElementById('players')!.appendChild(div_player);
 		}
 	}
 }
