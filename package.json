@@ -7,8 +7,7 @@
 		"start": "webpack-dev-server",
 		"build": "webpack --config webpack.config.prod.js",
 		"test": "jasmine-ts",
-		"test:watch": "nodemon --ext ts --exec jasmine-ts \"src/**/*.spec.ts\"",
-		"test:coverage": "nyc  -r lcov -e .ts -x \"*.spec.ts\" jasmine-ts"
+		"test:watch": "nodemon --ext ts --exec jasmine-ts \"src/**/*.spec.ts\""
 	},
 	"repository": {
 		"type": "git",
