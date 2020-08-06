@@ -6,7 +6,9 @@
 	"scripts": {
 		"start": "webpack-dev-server",
 		"build": "webpack --config webpack.config.prod.js",
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"test": "jasmine-ts",
+		"test:watch": "nodemon --ext ts --exec jasmine-ts \"src/**/*.spec.ts\"",
+		"test:coverage": "nyc  -r lcov -e .ts -x \"*.spec.ts\" jasmine-ts"
 	},
 	"repository": {
 		"type": "git",
