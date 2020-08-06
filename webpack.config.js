@@ -1,10 +1,7 @@
 const path = require('path');
-const dotenv = require('dotenv');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-
-dotenv.config();
 
 module.exports = {
 	mode: 'development',

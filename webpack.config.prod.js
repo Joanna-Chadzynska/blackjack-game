@@ -1,11 +1,9 @@
 const path = require('path');
-const dotenv = require('dotenv');
+
 const { SourceMapDevToolPlugin } = require('webpack');
 const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-
-dotenv.config();
 
 module.exports = {
 	mode: 'production',
