@@ -1,5 +1,4 @@
 import './sass/index.scss';
-
 import { Game } from './components/Game';
 
 const startBtn = document.getElementById('btn__start')!;
@@ -7,6 +6,7 @@ const modeBtns = [
 	...document.querySelectorAll<HTMLButtonElement>('.btn__mode')!,
 ];
 const selectedMode = document.querySelector('.game__selected-mode')!;
+const colorInput = document.getElementById('base')! as HTMLInputElement;
 
 const startGame = (players: number) => {
 	const game = new Game();
@@ -31,4 +31,11 @@ const selectMode = (e: Event) => {
 	startBtn.addEventListener('click', () => startGame(Number(mode)));
 };
 
+const handleUpdateColor = () => {
+	// document.documentElement.style.setProperty('background', colorInput.value);
+	const game = document.querySelector('.game')! as HTMLDivElement;
+	game.style.setProperty('background', colorInput.value);
+};
+
 modeBtns.forEach((mode) => mode.addEventListener('click', selectMode));
+colorInput.addEventListener('change', handleUpdateColor);
