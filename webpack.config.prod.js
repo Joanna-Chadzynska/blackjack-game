@@ -88,7 +88,7 @@ module.exports = {
 		],
 	},
 	plugins: [
-		new CleanWebpackPlugin(),
+		// new CleanWebpackPlugin(),
 		new MiniCssExtractPlugin({
 			filename: 'style.bundle.css',
 		}),
