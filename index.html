@@ -9,35 +9,49 @@
 	<body>
 		<div class="game">
 			<div class="game__header">
-				<h3 class="title">Blackjack</h3>
+				<h3 class="game__header__title">Blackjack</h3>
 			</div>
-			<label for="base">Base Color</label>
-			<input id="base" type="color" name="base" value="#3ac7fe" />
+			<!-- <label for="base">Base Color</label> -->
+			<input
+				id="base"
+				type="color"
+				name="base"
+				style="display: none;"
+				value="#1A4111"
+			/>
 			<div class="game__mode">
-				<p>Select mode:</p>
-				<button class="btn btn__mode" data-mode="1">Single Player</button>
-				<button class="btn btn__mode" data-mode="2">Multiplayer</button>
+				<div class="game__mode__select">
+					<span>Select mode</span>
+					<br />
+					<br />
+					<div class="buttons__container">
+						<button class="btn btn__mode" data-mode="1">Single Player</button>
+						<button class="btn btn__mode" data-mode="2">Multiplayer</button>
+					</div>
+				</div>
 			</div>
+
 			<div class="game__selected-mode">
 				<p id="mode__info"></p>
 				<p>Press start</p>
 			</div>
-			<hr />
+			<br />
 			<div class="game__body">
-				<button class="btn" id="btn__start">Start</button>
-				<button class="btn" id="btn__hit">Hit Me</button>
-				<button class="btn" id="btn__stay">Stay</button>
+				<div class="buttons__container">
+					<button class="btn" id="btn__start">Start</button>
+					<button class="btn" id="btn__hit">Hit Me</button>
+					<button class="btn" id="btn__stay">Stay</button>
+				</div>
+
+				<div class="game__body__info">
+					<div class="deck" id="deck">
+						<div id="deckCount">52</div>
+					</div>
+					<div class="status" id="status"></div>
+				</div>
+
+				<div id="players" class="players"></div>
 			</div>
-
-			<div class="status" id="status"></div>
-
-			<div class="deck" id="deck">
-				<div id="deckCount">52</div>
-			</div>
-
-			<div id="players" class="players"></div>
-
-			<div class="clear"></div>
 		</div>
 		<!-- <footer>&copy; Joanna Chądzyńska</footer> -->
 		<script type="module" src="dist/bundle.js"></script>

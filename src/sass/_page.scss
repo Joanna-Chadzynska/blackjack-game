@@ -1,37 +1,65 @@
 .game {
-	width: 720px;
-	border: solid 1px #ddd;
+	max-width: 960px;
+	border-radius: 50px;
 	margin: 0 auto;
+	margin-top: 1rem;
 	background: $base-color;
-	border: solid 10px;
+	border: solid 10px $base-color;
 	text-align: center;
 	min-height: 430px;
+	&__header__title {
+		color: $primary-color;
+		font-weight: 900;
+		font-size: 3rem;
+		font-style: italic;
+		text-shadow: 2px 8px 6px rgba(0, 0, 0, 0.5),
+			0px -5px 35px rgba(255, 255, 255, 0.3), 2px 2px 2px rgba(206, 102, 77, 0);
+		text-transform: uppercase;
+	}
+
+	&__body {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		padding: 20px;
+		position: relative;
+
+		&__info {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+	}
+}
+
+.game__mode {
+	span {
+		color: $secondary-color;
+		font-weight: 600;
+		font-size: 1.5rem;
+		text-transform: uppercase;
+	}
 }
 
 .btn {
+	background: $dark-color;
 	border: none;
-	padding: 10px 30px;
 	border-radius: 10px;
+	color: $secondary-color;
 	cursor: pointer;
+	font-weight: 600;
+	font-family: $main-font;
+	font-size: medium;
+	letter-spacing: 1px;
+	margin: 0 0.5rem;
+	padding: 10px 30px;
+	text-transform: uppercase;
 	transition: 0.3s all linear;
-	-webkit-transition: 0.3s all linear;
-	-moz-transition: 0.3s all linear;
-	-ms-transition: 0.3s all linear;
-	-o-transition: 0.3s all linear;
-}
 
-.btn:hover {
-	background: dodgerblue;
-}
-
-.game h3 {
-	padding: 10px;
-	background: black;
-	color: white;
-}
-
-.game .game__body {
-	padding: 20px;
+	&:hover {
+		background: darken($primary-color, 10%);
+		color: $base-color;
+	}
 }
 
 .game .game-options {
@@ -53,7 +81,7 @@
 
 .game .status {
 	display: inline-block;
-	background: gold;
+	background: $primary-color;
 	border: solid 5px white;
 	border-radius: 10px;
 	padding: 5px 20px;
@@ -63,9 +91,9 @@
 }
 
 .players {
-	width: 500px;
+	width: 960px;
 	margin: 0 auto;
-	margin-top: 20px;
+	margin-top: 1.25rem;
 	text-align: center;
 }
 
@@ -81,7 +109,7 @@
 }
 
 .player.active {
-	border: solid 5px #222;
+	border: solid 5px darken($primary-color, 5%);
 }
 
 .points {
@@ -92,18 +120,13 @@
 }
 
 .deck {
-	float: left;
 	background: white;
-	color: #222;
+	color: $dark-color;
 	padding: 10px;
+	margin: 1rem;
 	border-radius: 10px;
 	border: double 5px;
-}
-
-.btn {
-	background: #222;
-	color: white !important;
-	border-radius: 0px;
+	justify-self: start;
 }
 
 .hand {
