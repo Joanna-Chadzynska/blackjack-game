@@ -138,9 +138,10 @@
 }
 
 .game__selected-mode {
+	color: $secondary-color;
 	display: none;
 
 	&.show {
-		display: inline-block;
+		display: block;
 	}
 }
