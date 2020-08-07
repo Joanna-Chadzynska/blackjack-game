@@ -15,7 +15,6 @@ export class Game {
 		this.players = new Players();
 		this.currentPlayer = 0;
 		this.deck = new Pile();
-
 		this.status = document.getElementById('status')! as HTMLDivElement;
 		this.startBtn = document.getElementById('btn__start')!;
 		this.hitBtn = document
@@ -62,17 +61,38 @@ export class Game {
 
 		for (let player of this.players.players) {
 			const cards = (await this.deck.drawCard(deckId, 2)).cards;
+
 			player.hand = cards;
 			player.points = this.getPoints(player.hand);
-
 			player.hand.forEach((el) =>
 				this.deck.renderCard(el.image, player.id - 1)
 			);
 
 			this.updatePoints();
+
+			// check if any of player has two aces in hand
+			let playerHand = player.hand.map((el) => el.value);
+			if (this.checkForDuplicatedAces(playerHand)) {
+				this.status.innerHTML = `Winner: Player ${player.id}`;
+				this.status.style.display = 'inline-block';
+			}
 		}
 
 		this.deck.updateDeck(this.deck.deck.deck_id);
+	}
+
+	private checkForDuplicatedAces(array: string[]) {
+		const hasDuplicates = new Set(array).size !== array.length;
+		let hasTwoAces;
+		if (hasDuplicates) {
+			if (array.every((arr) => arr === 'ACE')) {
+				hasTwoAces = true;
+			} else {
+				hasTwoAces = false;
+			}
+		}
+
+		return hasTwoAces;
 	}
 
 	private getPoints(playerHand: Card[]) {
@@ -136,9 +156,7 @@ export class Game {
 		let score = 0;
 
 		for (let i = 0; i < this.players.players.length; i++) {
-			// let previous = this.players[i - 1];
 			let current = this.players.players[i];
-			// let next = this.players[i + 1];
 
 			if (current.points > score && current.points < 22) {
 				winner = i;
