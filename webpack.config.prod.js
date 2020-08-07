@@ -1,9 +1,8 @@
 const path = require('path');
 
-const { SourceMapDevToolPlugin } = require('webpack');
 const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
 	mode: 'production',
@@ -16,15 +15,6 @@ module.exports = {
 	devtool: 'none',
 	module: {
 		rules: [
-			{
-				test: /\.module\..s(a|c)ss$/,
-				use: [
-					MiniCssExtractPlugin.loader,
-					{ loader: 'css-loader', options: { importLoaders: 1 } },
-					'postcss-loader',
-					'sass-loader',
-				],
-			},
 			{
 				test: /\.s(a|c)ss$/,
 				use: [
@@ -88,7 +78,7 @@ module.exports = {
 		],
 	},
 	plugins: [
-		// new CleanWebpackPlugin(),
+		new CleanWebpackPlugin(),
 		new MiniCssExtractPlugin({
 			filename: 'style.bundle.css',
 		}),

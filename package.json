@@ -4,7 +4,7 @@
 	"description": "Blackjack Game",
 	"main": "index.js",
 	"scripts": {
-		"start": "webpack-dev-server",
+		"start": "webpack-dev-server --history-api-fallback",
 		"build": "webpack --config webpack.config.prod.js",
 		"test": "jasmine-ts",
 		"test:watch": "nodemon --ext ts --exec jasmine-ts \"src/**/*.spec.ts\""

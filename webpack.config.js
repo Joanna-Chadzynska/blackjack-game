@@ -1,5 +1,5 @@
 const path = require('path');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
@@ -15,14 +15,14 @@ module.exports = {
 	devServer: {
 		open: true,
 		contentBase: path.resolve(__dirname),
-		watchContentBase: true,
 		port: 3000,
 		hot: true,
+		inline: true,
 	},
 	module: {
 		rules: [
 			{
-				test: /\.module\.s(a|c)ss$/,
+				test: /\.s(a|c)ss$/,
 				use: [
 					'style-loader',
 					{ loader: 'css-loader', options: { importLoaders: 1 } },
@@ -36,27 +36,7 @@ module.exports = {
 						loader: 'sass-loader',
 						options: {
 							sourceMap: process.env.NODE_ENV === 'development',
-							webpackImporter: false,
-						},
-					},
-				],
-			},
-			{
-				test: /\.s(a|c)ss$/,
-				use: [
-					'style-loader',
-					{ loader: 'css-loader', options: { importLoaders: 1 } },
-					{
-						loader: 'postcss-loader',
-						options: {
-							sourceMap: true,
-						},
-					},
-					{
-						loader: 'sass-loader',
-						options: {
-							sourceMap: process.env.NODE_ENV === 'development',
-							webpackImporter: false,
+							webpackImporter: true,
 						},
 					},
 				],
@@ -92,12 +72,10 @@ module.exports = {
 		],
 	},
 	plugins: [
+		new CleanWebpackPlugin(),
 		new HtmlWebpackPlugin({
 			filename: 'index.html',
 			template: './index.html',
 		}),
-		// new MiniCssExtractPlugin({
-		// 	filename: 'style.css',
-		// }),
 	],
 };
