@@ -14,7 +14,7 @@
 		"url": "git+https://github.com/Joanna-Chadzynska/blackjack-game.git"
 	},
 	"author": "Joanna Chądzyńska",
-	"license": "ISC",
+	"license": "MIT",
 	"bugs": {
 		"url": "https://github.com/Joanna-Chadzynska/blackjack-game/issues"
 	},
