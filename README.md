@@ -1,10 +1,10 @@
-# blackjack-game
+# Blackjack game
 
 Blackjack game based on TypeScript, HTML, SCSS and free public [API](https://deckofcardsapi.com/)
 
 ## Table of contents
 
-- [blackjack-game](#blackjack-game)
+- [Blackjack game](#blackjack-game)
   - [Table of contents](#table-of-contents)
   - [General info](#general-info)
   - [Screenshots](#screenshots)
